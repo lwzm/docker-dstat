@@ -5,9 +5,11 @@ FROM alpine
 LABEL maintainer="lwzm@qq.com"
 
 COPY --from=ttyd /usr/bin/ttyd /bin/
-COPY entrypoint.sh /bin/
-ADD https://github.com/dagwieers/dstat/raw/0.7.3/dstat /bin/
-RUN chmod +x /bin/dstat && apk add --no-cache python2 && find /usr -name '*.pyc' -delete
+COPY entrypoint.sh dstat /bin/
+RUN apk add --no-cache python2 \
+    && cd /usr/lib/python2* \
+    && find . -name '*.pyo' -delete \
+    && find . -name '*.py' -delete
 
 EXPOSE 80
 

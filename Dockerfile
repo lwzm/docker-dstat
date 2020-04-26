@@ -11,4 +11,4 @@ RUN apk add --no-cache python2 \
     && dstat 1 1 \
     && find . -name '*.py' -delete
 
-CMD [ "dstat", "--color" ]
+CMD [ "dstat", "-fclmgdrny", "--color" ]

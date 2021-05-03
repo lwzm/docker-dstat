@@ -14,7 +14,7 @@ RUN apk add --no-cache python2 lsof \
     && rm -r $(ls -d */) \
     && mv ../encodings ../lib-dynload . \
     && find . -name '*.py?' -delete \
-    && ( dstat 1 5 >/dev/null & sleep 1 && mv $(lsof -p $! | grep lib-dynload/ | awk '{print $8}') . && wait ) \
+    && ( dstat 1 5 >/dev/null & sleep 1 && mv $(lsof -F n -p $! | grep lib-dynload/ | cut -d ' ' -f 1 | cut -c 2- ) . && wait ) \
     && rm lib-dynload/* \
     && mv *.so lib-dynload/ \
     && find . -name '*.py' -delete \

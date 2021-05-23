@@ -12,6 +12,7 @@ FROM scratch
 
 LABEL maintainer="lwzm@qq.com"
 
-CMD [ "dstat", "-fclmgdrny", "--color" ]
+ENTRYPOINT [ "dstat", "--color" ]
+CMD [ "-fclmgdrny" ]
 
 COPY --from=base /x/ /

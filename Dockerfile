@@ -1,17 +1,18 @@
 FROM alpine:3.5 as base
 
-COPY dstat /bin/
 RUN apk add --no-cache python2 lsof
+COPY dstat /bin/
 RUN find /usr/lib/python2* -name '*.py?' -delete \
-    && (dstat 1 5 >/dev/null & sleep 1 && lsof -F n -p $! | grep lib-dynload/ | cut -d ' ' -f 1 | cut -c 2- && wait \
-		&& find /usr/lib/python2* -name '*.py?' && ls /usr/lib/libpython* /usr/bin/python* /bin/dstat) \
-	| cpio -dp /tmp
+    && (dstat 1 5 >/dev/null & sleep 1 && lsof -F n -p $! | grep ^fmem -A 1 | grep ^n | cut -d ' ' -f 1 | cut -c 2- && wait \
+		&& find /usr/lib/python2* -name '*.py?' && ls /usr/bin/python* /bin/dstat /etc/passwd) \
+	| cpio -dp /x/
 
 
-FROM alpine:3.5
+FROM scratch
 
 LABEL maintainer="lwzm@qq.com"
 
-CMD [ "dstat", "-fclmgdrny", "--color" ]
+ENTRYPOINT [ "dstat", "--color" ]
+CMD [ "-fclmgdrny" ]
 
-COPY --from=base /tmp /
+COPY --from=base /x/ /
